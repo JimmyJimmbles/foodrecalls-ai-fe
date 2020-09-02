@@ -1,25 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Switch, Route } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
+import { ThemeProvider } from '@material-ui/core/styles';
+
+import client from './apollo-client';
+import theme from './theme';
+import { LogIn, Dashboard } from 'views';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <Switch>
+          <Route exact path="/login" component={LogIn} />
+          <Route exact path="/dashboard" component={Dashboard} />
+        </Switch>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 
