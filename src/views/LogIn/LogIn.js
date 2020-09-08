@@ -19,7 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Alert } from 'components';
 import styles from './styles';
 
-export const LogIn = () => {
+export const LogIn = ({ history, ...props }) => {
   const classes = styles();
   const {
     handleChange,
@@ -41,8 +41,9 @@ export const LogIn = () => {
   if (data && data.loginUser) {
     saveTokens(data.loginUser.token);
 
-    // Redirect to home page
-    return <Redirect to="dashboard" />;
+    // Redirect to Dashboard
+    history.push('/dashboard');
+    // return <Redirect to="dashboard" />;
   }
 
   return (
@@ -59,7 +60,7 @@ export const LogIn = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Log In
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -97,7 +98,7 @@ export const LogIn = () => {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Sign In
+            Log In
           </Button>
         </form>
       </Box>

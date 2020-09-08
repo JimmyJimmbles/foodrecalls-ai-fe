@@ -1,20 +1,20 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+// import { Router } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core/styles';
+// import { createBrowserHistory } from 'history';
+import Routes from './Routes';
 
 import client from './apollo-client';
 import theme from './theme';
-import { LogIn, Dashboard } from 'views';
+
+// const browserHistory = createBrowserHistory();
 
 function App() {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <Switch>
-          <Route exact path="/login" component={LogIn} />
-          <Route exact path="/dashboard" component={Dashboard} />
-        </Switch>
+        <Routes />
       </ThemeProvider>
     </ApolloProvider>
   );
