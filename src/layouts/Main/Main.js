@@ -1,29 +1,15 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { useTheme } from '@material-ui/styles';
+import styles from './styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Sidebar, Topbar, Footer } from './components';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: 56,
-    height: '100%',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64,
-    },
-  },
-  shiftContent: {
-    paddingLeft: 240,
-  },
-  content: {
-    height: '100%',
-  },
-}));
-
 const Main = ({ children, ...props }) => {
-  const classes = useStyles();
+  const classes = styles();
+  const { root, shiftContent, content } = classes;
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
 
@@ -42,11 +28,17 @@ const Main = ({ children, ...props }) => {
   return (
     <div
       className={classnames({
-        [classes.root]: true,
-        [classes.shiftContent]: isDesktop,
+        [root]: true,
+        [shiftContent]: isDesktop,
       })}
     >
-      <main className={classes.content}>
+      <Topbar onSidebarOpen={handleSidebarOpen} />
+      <Sidebar
+        onClose={handleSidebarClose}
+        open={shouldOpenSidebar}
+        variant={isDesktop ? 'persistent' : 'temporary'}
+      />
+      <main className={content}>
         {children}
         <Footer />
       </main>

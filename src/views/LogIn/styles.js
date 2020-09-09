@@ -6,6 +6,7 @@ const styles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor: '#fff',
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(8),
       marginRight: theme.spacing(3),
@@ -24,6 +25,8 @@ const styles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     color: '#fff',
+    boxShadow: 'none',
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 

@@ -52,7 +52,7 @@ export const LogIn = ({ history, ...props }) => {
       <Box
         className={classes.paper}
         padding={5}
-        border={2}
+        border={1}
         borderColor="grey.300"
         borderRadius={4}
       >
