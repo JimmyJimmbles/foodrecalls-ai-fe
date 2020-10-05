@@ -1,14 +1,18 @@
+import { CssBaseline } from '@material-ui/core';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-const RouteWithLayout = (props) => {
-  const { layout: Layout, component: Component, ...rest } = props;
-
+const RouteWithLayout = ({
+  layout: Layout,
+  component: Component,
+  ...props
+}) => {
   return (
     <Route
-      {...rest}
+      {...props}
       render={(matchProps) => (
         <Layout>
+          <CssBaseline />
           <Component {...matchProps} />
         </Layout>
       )}

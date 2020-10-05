@@ -1,12 +1,32 @@
 import { gql } from '@apollo/client';
 
-const GET_AUTHENTICATED_USER = gql`
+const GET_CURRENT_USER = gql`
   {
-    authenticatedUser {
+    me {
       uuid
       firstName
       lastName
+      email
       role
+      CompanyId
+      jobTitle
+      company {
+        name
+        recalls {
+          count
+          records {
+            uuid
+            recallingFirm
+            recallInitiationDate
+            reasonForRecall
+            recallNumber
+            productQuantity
+            voluntaryMandated
+            classification
+            status
+          }
+        }
+      }
     }
   }
 `;
@@ -19,4 +39,4 @@ const LOGIN_USER = gql`
   }
 `;
 
-export { GET_AUTHENTICATED_USER, LOGIN_USER };
+export { GET_CURRENT_USER, LOGIN_USER };

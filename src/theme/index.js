@@ -1,19 +1,17 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+import palette from './palette';
+import typography from './typography';
+import overrides from './overrides';
+
 // Make edits to the theme
 const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#92d050',
-      dark: '#78a45a',
-    },
-    secondary: {
-      main: '#f4bb50',
-      dark: '#fea700',
-    },
-    info: {
-      main: '#4878d1',
-    },
+  palette,
+  typography,
+  overrides,
+  zIndex: {
+    appBar: 1200,
+    drawer: 1100,
   },
 });
 

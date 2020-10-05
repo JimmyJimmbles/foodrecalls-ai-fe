@@ -19,7 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Alert } from 'components';
 import styles from './styles';
 
-export const LogIn = ({ history, ...props }) => {
+const LogIn = ({ history, ...props }) => {
   const classes = styles();
   const {
     handleChange,
@@ -42,8 +42,7 @@ export const LogIn = ({ history, ...props }) => {
     saveTokens(data.loginUser.token);
 
     // Redirect to Dashboard
-    history.push('/dashboard');
-    // return <Redirect to="dashboard" />;
+    return <Redirect exact to="/dashboard" />;
   }
 
   return (

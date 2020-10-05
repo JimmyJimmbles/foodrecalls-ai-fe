@@ -1,45 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import { Divider, Drawer } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-// import PeopleIcon from '@material-ui/icons/People';
-// import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-// import TextFieldsIcon from '@material-ui/icons/TextFields';
-// import ImageIcon from '@material-ui/icons/Image';
-// import SettingsIcon from '@material-ui/icons/Settings';
-// import LockOpenIcon from '@material-ui/icons/LockOpen';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import styles from './styles';
-import { Profile } from './components';
-import { GET_AUTHENTICATED_USER } from 'queries/user';
-import { useQuery } from '@apollo/client';
+import { Profile, SidebarNav } from './components';
 
-const Sidebar = (props) => {
-  const { open, variant, onClose, className, ...rest } = props;
-  const initialState = {
-    uuid: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-  };
-  const [userData, setUserData] = useState(initialState);
-  const { loading, error, data } = useQuery(GET_AUTHENTICATED_USER);
-
-  console.log('loading', loading);
-  console.log('error', error);
-
-  useEffect(() => {
-    if (!loading && !error) {
-      setUserData(data?.authenticatedUser);
-    }
-  }, [loading, error, data]);
-
+const Sidebar = ({ open, variant, onClose, className, ...props }) => {
   const classes = styles();
   const pages = [
     {
       title: 'Dashboard',
       href: '/dashboard',
       icon: <DashboardIcon />,
+    },
+    {
+      title: 'Recalls',
+      href: '/recalls',
+      icon: <EqualizerRoundedIcon />,
+    },
+    {
+      title: 'All Companies',
+      href: '/companies',
+      icon: <PeopleAltIcon />,
     },
     {
       title: 'Account',
@@ -56,9 +41,10 @@ const Sidebar = (props) => {
       open={open}
       variant={variant}
     >
-      <div {...rest} className={classnames(classes.root, className)}>
-        <Profile userData={userData} />
+      <div className={classnames(classes.root, className)}>
+        <Profile />
         <Divider className={classes.divider} />
+        <SidebarNav className={classes.nav} pages={pages} />
       </div>
     </Drawer>
   );

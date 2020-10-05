@@ -20,7 +20,9 @@ const Footer = ({ className, ...props }) => {
           FoodRecalls.ai
         </Link>
       </Typography>
-      <Typography variant="caption">Created with love.</Typography>
+      <Typography variant="caption">
+        Created with music and lots of caffeine.
+      </Typography>
     </div>
   );
 };
