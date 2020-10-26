@@ -4,7 +4,7 @@ import styles from './styles';
 import { useCompanyRecalls } from 'hooks';
 import { Grid, CircularProgress } from '@material-ui/core';
 import { RecallsToolbar, RecallsTable, RecallLineGraph } from './components';
-import { RecallDoughnutByField } from 'views/Dashboard/components';
+import { RecallDoughnutByField } from 'components';
 import { GET_CURRENT_USER } from 'queries/user';
 import { useQuery } from '@apollo/client';
 

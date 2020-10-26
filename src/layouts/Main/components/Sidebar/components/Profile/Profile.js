@@ -8,28 +8,27 @@ import { useQuery } from '@apollo/client';
 
 import { getFullName, getInitials } from 'helpers';
 
-const Profile = ({ className }) => {
+const Profile = ({ className, myData }) => {
   const classes = styles();
-
-  const { loading, error, data } = useQuery(GET_CURRENT_USER);
-
-  const [myData, setMyData] = useState({});
-
-  useEffect(() => {
-    if (!loading && !error && data) {
-      setMyData(data);
-    }
-  }, [loading, error, data]);
-
   const { root, primary, secondary, teal, avatar, userData } = classes;
 
-  if (loading || !data || !myData || !myData.me) {
-    return (
-      <div className={classnames(root, className)}>
-        <CircularProgress color="secondary" />
-      </div>
-    );
-  }
+  // const { loading, error, data } = useQuery(GET_CURRENT_USER);
+
+  // const [myData, setMyData] = useState({});
+
+  // useEffect(() => {
+  //   if (!loading && !error && data) {
+  //     setMyData(data);
+  //   }
+  // }, [loading, error, data]);
+
+  // if (loading || !data || !myData || !myData.me) {
+  //   return (
+  //     <div className={classnames(root, className)}>
+  //       <CircularProgress color="secondary" />
+  //     </div>
+  //   );
+  // }
 
   const { firstName, lastName, company } = myData.me;
 

@@ -23,6 +23,7 @@ const RecallDoughnutByField = ({ companyName, className }) => {
   const classes = styles();
   const theme = useTheme();
 
+  // Set the graph colors
   const graphColors = [
     theme.palette.primary.main,
     theme.palette.secondary.main,
@@ -46,6 +47,7 @@ const RecallDoughnutByField = ({ companyName, className }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterBy, setFilterBy] = useState('classification');
 
+  // Query the company recall data
   const { loading, error, recallData } = useCompanyRecalls({
     companyName,
     limit: 2000,
@@ -55,11 +57,13 @@ const RecallDoughnutByField = ({ companyName, className }) => {
   });
 
   useEffect(() => {
+    // Make sure we have valid data.
     if (!loading && !error && recallData) {
       setGraphData(recallData);
     }
   }, [loading, error, recallData]);
 
+  // Return loading spinner until we have data
   if (loading || !graphData || !graphData.getAllCompanyRecalls) {
     return (
       <div className={classnames(root, className)}>
@@ -72,9 +76,11 @@ const RecallDoughnutByField = ({ companyName, className }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // Filter doughnut data on click
   const handleChartFilterClose = (event) => {
     const { filterValue } = event.currentTarget.dataset;
 
+    // If user clicks away default to classification filter
     if (!filterValue) {
       setFilterBy('classification');
     } else {
@@ -84,16 +90,19 @@ const RecallDoughnutByField = ({ companyName, className }) => {
     setAnchorEl(null);
   };
 
+  // Deconstruct recall data
   const {
     getAllCompanyRecalls: { count, records },
   } = graphData;
 
+  // Create array of the filtered data.
   const filterByArr = records.map((item) => item[filterBy]);
 
   let filterByObj = {};
   for (let i = 0; i < filterByArr.length; i++) {
     const elm = filterByArr[i];
 
+    // Assign the data numerical data to be used for the graph.
     if (typeof filterByObj[elm] === 'undefined' || filterByObj[elm] === null) {
       filterByObj[elm] = 1;
     } else {
@@ -101,6 +110,7 @@ const RecallDoughnutByField = ({ companyName, className }) => {
     }
   }
 
+  // Create array of the filtered data based on the count
   const filterByCount = Object.keys(filterByObj).map((res) => filterByObj[res]);
   const dataLabels = Object.keys(filterByObj);
 

@@ -15,7 +15,11 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   // Get the authentication tokens from local storage if they exist.
+  // TODO: IF TOKEN HAS EXPIRED DO NOT FETCH IT, AND REQUIRE NEW TOKEN.
+  // PERHAPS WE CHECK STATUS OF TOKEN IF EXPIRED DELETE IT AND TRY TO RESET IT.
   const token = getTokens();
+
+  console.log('token', token);
 
   // return the headers to the context so httpLink can read them
   return {

@@ -36,6 +36,16 @@ const LogIn = ({ history, ...props }) => {
 
   const { email, password } = values;
 
+  console.log({
+    handleChange,
+    handleSubmit,
+    values,
+    called,
+    loading,
+    data,
+    error,
+  });
+
   if (called && loading) return <CircularProgress color="secondary" />;
 
   if (data && data.loginUser) {

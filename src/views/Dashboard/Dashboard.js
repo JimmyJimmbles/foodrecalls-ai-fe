@@ -5,11 +5,11 @@ import styles from './styles';
 import {
   BrandPerception,
   LatestRecallsTable,
-  RecallDoughnutByField,
   TotalRecalls,
 } from './components';
 import { GET_CURRENT_USER } from 'queries/user';
 import { useQuery } from '@apollo/client';
+import { RecallDoughnutByField } from 'components';
 
 const Dashboard = ({ className }) => {
   const classes = styles();
