@@ -7,12 +7,10 @@ const useCompanyList = ({ limit, offset, sortBy, sortDirection }) => {
     variables: { limit, offset, sortBy, sortDirection },
   });
 
-  const [companyData, setCompanyData] = useState({ loading, error, data });
+  const [companyData, setCompanyData] = useState(data);
 
   useEffect(() => {
-    if (!loading || !error || !data || !data.me) {
-      setCompanyData(data);
-    }
+    setCompanyData(data);
   }, [loading, error, data]);
 
   return {

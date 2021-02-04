@@ -4,6 +4,7 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import styles from './styles';
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -18,6 +19,7 @@ import {
 } from '@material-ui/core';
 import { StatusBullet } from 'components';
 import { useCompanyRecalls } from 'hooks';
+import RecallDialog from '../RecallDialog';
 
 const statusColors = {
   completed: 'success',
@@ -25,13 +27,11 @@ const statusColors = {
   terminated: 'success',
 };
 
+// Sort table columns
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
+  if (b[orderBy] < a[orderBy]) return -1;
+  if (b[orderBy] > a[orderBy]) return 1;
+
   return 0;
 }
 
@@ -87,6 +87,7 @@ const headCells = [
     sortable: true,
   },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
+  { id: 'actions', numeric: false, disablePadding: false, label: 'Actions' },
 ];
 
 const RecallsTable = ({ companyName, className }) => {
@@ -96,6 +97,7 @@ const RecallsTable = ({ companyName, className }) => {
   const [orderBy, setOrderBy] = useState('recallInitiationDate');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState({ isOpen: false });
 
   const [recalls, setRecalls] = useState({});
 
@@ -122,17 +124,24 @@ const RecallsTable = ({ companyName, className }) => {
   }
 
   const handleRequestSort = (event, property) => {
+    event.persist();
+
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
   const handlePageChange = (event, page) => {
+    event.persist();
     setPage(page);
   };
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
+  };
+
+  const handleClickOpen = (recallData) => {
+    setOpen({ isOpen: true, ...recallData });
   };
 
   const {
@@ -217,6 +226,17 @@ const RecallsTable = ({ companyName, className }) => {
                             {recall.status}
                           </div>
                         </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            aria-label="View More Recall Data"
+                            onClick={() => handleClickOpen(recall)}
+                          >
+                            View More
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                 {emptyRows > 0 && (
@@ -240,6 +260,7 @@ const RecallsTable = ({ companyName, className }) => {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </CardActions>
+      <RecallDialog {...open} setOpen={setOpen} />
     </Card>
   );
 };

@@ -18,6 +18,11 @@ const GET_ALL_COMPANIES = gql`
         id
         uuid
         name
+        websiteUrl
+        phoneNumber
+        city
+        state
+        employeeRange
       }
     }
   }
@@ -29,6 +34,11 @@ const GET_COMPANY_BY_ID = gql`
       id
       uuid
       name
+      websiteUrl
+      phoneNumber
+      city
+      state
+      employeeRange
       recalls {
         count
         records {

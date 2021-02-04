@@ -8,9 +8,10 @@ const GET_CURRENT_USER = gql`
       lastName
       email
       role
-      CompanyId
       jobTitle
       company {
+        id
+        uuid
         name
         recalls {
           count
@@ -39,4 +40,17 @@ const LOGIN_USER = gql`
   }
 `;
 
-export { GET_CURRENT_USER, LOGIN_USER };
+const UPDATE_ME = gql`
+  mutation UpdateUser($uuid: Uuid!, $updateUserInput: UpdateUserInput!) {
+    updateUser(uuid: $uuid, input: $updateUserInput) {
+      uuid
+      firstName
+      lastName
+      email
+      role
+      jobTitle
+    }
+  }
+`;
+
+export { GET_CURRENT_USER, LOGIN_USER, UPDATE_ME };

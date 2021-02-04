@@ -10,6 +10,9 @@ import {
   CircularProgress,
   IconButton,
   Divider,
+  FormControl,
+  InputLabel,
+  Select,
   Typography,
   useTheme,
   Menu,
@@ -33,11 +36,10 @@ const RecallLineGraph = ({ companyName, className }) => {
   } = classes;
 
   const [graphData, setGraphData] = useState({});
-  //   const [anchorEl, setAnchorEl] = useState(null);
   const [filterBy, setFilterBy] = useState('recallInitiationDate');
   const { loading, error, recallData } = useCompanyRecalls({
     companyName,
-    limit: 1001,
+    limit: 2000,
     offset: 0,
     sortBy: 'recallInitiationDate',
     sortDirection: 'DESC',
@@ -61,9 +63,6 @@ const RecallLineGraph = ({ companyName, className }) => {
     getAllCompanyRecalls: { count, records },
   } = graphData;
 
-  console.log('records-jj', records);
-  console.log('count-jj', count);
-
   const recallInitYears = records.map((item) => moment(item[filterBy]).year());
 
   let recallInitCount = {};
@@ -80,9 +79,10 @@ const RecallLineGraph = ({ companyName, className }) => {
     }
   }
 
-  console.log('recallInitCount-jj', recallInitCount);
   const dataLabels = Object.keys(recallInitCount);
   const data = Object.keys(recallInitCount).map((key) => recallInitCount[key]);
+
+  console.log({ data });
 
   const lineData = {
     labels: dataLabels,
@@ -94,7 +94,7 @@ const RecallLineGraph = ({ companyName, className }) => {
         backgroundColor: 'rgba(146, 208, 80, 0.3)',
         borderColor: theme.palette.primary.main,
         borderCapStyle: 'butt',
-        borderDash: [],
+        borderDash: [0],
         borderDashOffset: 0.0,
         borderJoinStyle: 'miter',
         pointBorderColor: theme.palette.secondary.dark,
@@ -112,11 +112,56 @@ const RecallLineGraph = ({ companyName, className }) => {
   };
 
   const options = {
+    responsive: true,
+    scales: {
+      xAxes: [
+        {
+          barThickness: 12,
+          maxBarThickness: 10,
+          barPercentage: 0.5,
+          categoryPercentage: 0.5,
+          ticks: {
+            fontColor: theme.palette.text.secondary,
+          },
+          gridLines: {
+            borderDash: [4],
+            borderDashOffset: [4],
+            color: theme.palette.divider,
+            drawBorder: true,
+            zeroLineBorderDash: [4],
+            zeroLineBorderDashOffset: [4],
+            zeroLineColor: theme.palette.divider,
+          },
+        },
+      ],
+      yAxes: [
+        {
+          ticks: {
+            fontColor: theme.palette.text.secondary,
+          },
+          gridLines: {
+            borderDash: [4],
+            borderDashOffset: [4],
+            color: theme.palette.divider,
+            drawBorder: true,
+            zeroLineBorderDash: [4],
+            zeroLineBorderDashOffset: [4],
+            zeroLineColor: theme.palette.divider,
+          },
+        },
+      ],
+    },
     legend: {
       position: 'bottom',
       labels: {
         boxWidth: 40,
       },
+    },
+    cornerRadius: 20,
+    tooltips: {
+      enabled: true,
+      mode: 'index',
+      intersect: false,
     },
   };
 

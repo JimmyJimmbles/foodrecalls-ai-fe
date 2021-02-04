@@ -25,9 +25,9 @@ const RecallDoughnutByField = ({ companyName, className }) => {
 
   // Set the graph colors
   const graphColors = [
-    theme.palette.primary.main,
-    theme.palette.secondary.main,
     theme.palette.error.main,
+    theme.palette.secondary.main,
+    theme.palette.primary.main,
     theme.palette.info.main,
     theme.palette.warning.light,
     theme.palette.info.light,

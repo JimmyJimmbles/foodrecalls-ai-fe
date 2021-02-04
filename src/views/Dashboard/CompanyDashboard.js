@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import {Redirect} from 'react-router';
+import React from 'react';
 import {Grid, CircularProgress, Typography} from '@material-ui/core';
 import styles from './styles';
 import {BrandPerception, LatestRecallsTable, TotalRecalls} from './components';
-import {GET_CURRENT_USER} from 'queries/user';
+import {GET_COMPANY_BY_ID} from 'queries/company';
 import {useQuery} from '@apollo/client';
 import {RecallDoughnutByField} from 'components';
 
-export const Dashboard = () => {
+export const CompanyDashboard = ({match: {params}}) => {
   const classes = styles();
   const {root} = classes;
 
-  const {loading, error, data} = useQuery(GET_CURRENT_USER);
+  const {loading, error, data} = useQuery(GET_COMPANY_BY_ID, {
+    variables: {id: params.id},
+  });
 
   if (loading) return <CircularProgress color="secondary" />;
 
-  const me = data?.me;
-  const company = me?.company;
+  const company = data?.getCompanyById;
 
-  console.log({data});
+  console.log({company});
 
   return (
     <div className={root}>
@@ -37,7 +37,7 @@ export const Dashboard = () => {
       </Grid>
       <Grid container spacing={4}>
         <Grid item lg={8} md={6} xs={12}>
-          <LatestRecallsTable recalls={company?.recalls?.records} />
+          <LatestRecallsTable companyID={company?.id} recalls={company?.recalls?.records} />
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <RecallDoughnutByField

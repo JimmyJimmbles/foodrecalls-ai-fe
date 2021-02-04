@@ -1,8 +1,10 @@
 // Vendors/Utils
-import React from 'react';
-import { Redirect } from 'react-router';
-import { useAuthenticationForm } from 'hooks';
-import { saveTokens } from 'local-storage';
+import React, {useState, useEffect} from 'react';
+import {useMutation} from '@apollo/client';
+import {useForm} from 'hooks';
+import {Switch, Redirect} from 'react-router-dom';
+
+import {LOGIN_USER} from '../../queries/user';
 
 // UI Components
 import {
@@ -16,59 +18,59 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Alert } from 'components';
+import {Alert} from 'components';
 import styles from './styles';
 
-const LogIn = ({ history, ...props }) => {
+const LogIn = ({history, setUserToken}) => {
   const classes = styles();
-  const {
-    handleChange,
-    handleSubmit,
-    values,
-    called,
-    loading,
-    data,
-    error,
-  } = useAuthenticationForm({
+  // Set states
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+
+  // Set up Login Mutation
+  const [loginUser, queryResponse] = useMutation(LOGIN_USER);
+
+  const handleLogin = ({email, password}) => loginUser({variables: {email, password}});
+
+  // useForm hook to handle the Login mutation and set sates of form components
+  const {handleChange, handleSubmit, values} = useForm(handleLogin, {
     email: '',
     password: '',
   });
 
-  const { email, password } = values;
+  // Get all relevant data.
+  const {email, password} = values;
+  const {called, loading, error, data} = queryResponse;
 
-  console.log({
-    handleChange,
-    handleSubmit,
-    values,
-    called,
-    loading,
-    data,
-    error,
-  });
+  useEffect(() => {
+    if (called && loading) setIsLoading(true);
 
-  if (called && loading) return <CircularProgress color="secondary" />;
+    if (called && error) {
+      setLoginError(error);
+      setIsLoading(false);
+    }
 
-  if (data && data.loginUser) {
-    saveTokens(data.loginUser.token);
+    if (data && data.loginUser) {
+      setUserToken(data.loginUser.token);
+      setIsLoading(false);
+    }
+  }, [called, loading, error, data, setUserToken]);
 
-    // Redirect to Dashboard
-    return <Redirect exact to="/dashboard" />;
+  if (isLoading) {
+    return <CircularProgress color="secondary" />;
+  } else if (called && data && data.loginUser.token) {
+    const redirect = <Redirect to="/dashboard" />;
+    return redirect;
   }
 
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
-      <Box
-        className={classes.paper}
-        padding={5}
-        border={1}
-        borderColor="grey.300"
-        borderRadius={4}
-      >
+      <Box className={classes.paper} padding={5} border={1} borderColor="grey.300" borderRadius={4}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4">
           Log In
         </Typography>
         <form className={classes.form} noValidate>
@@ -111,7 +113,7 @@ const LogIn = ({ history, ...props }) => {
           </Button>
         </form>
       </Box>
-      {error && <Alert severity="error">{error.message}</Alert>}
+      {loginError && <Alert severity="error">{loginError.message}</Alert>}
     </Container>
   );
 };

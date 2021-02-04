@@ -12,24 +12,6 @@ const Profile = ({ className, myData }) => {
   const classes = styles();
   const { root, primary, secondary, teal, avatar, userData } = classes;
 
-  // const { loading, error, data } = useQuery(GET_CURRENT_USER);
-
-  // const [myData, setMyData] = useState({});
-
-  // useEffect(() => {
-  //   if (!loading && !error && data) {
-  //     setMyData(data);
-  //   }
-  // }, [loading, error, data]);
-
-  // if (loading || !data || !myData || !myData.me) {
-  //   return (
-  //     <div className={classnames(root, className)}>
-  //       <CircularProgress color="secondary" />
-  //     </div>
-  //   );
-  // }
-
   const { firstName, lastName, company } = myData.me;
 
   const jobTitle = myData.me?.jobTitle;

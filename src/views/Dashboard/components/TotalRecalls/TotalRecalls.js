@@ -31,7 +31,7 @@ const TotalRecalls = ({ count, className }) => {
             </Avatar>
           </Grid>
         </Grid>
-        <div className={classes.difference}>
+        {/* <div className={classes.difference}>
           <ArrowDownwardIcon className={classes.differenceIcon} />
           <Typography className={classes.differenceValue} variant="body2">
             +8
@@ -39,7 +39,7 @@ const TotalRecalls = ({ count, className }) => {
           <Typography className={classes.caption} variant="caption">
             Since last month
           </Typography>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

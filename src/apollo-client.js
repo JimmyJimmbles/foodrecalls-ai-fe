@@ -7,16 +7,19 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { getTokens } from 'local-storage';
 import { onError } from 'apollo-link-error';
+import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:5000/graphql',
+  uri: process.env.REACT_APP_API_ENDPOINT,
   credentials: 'same-origin',
 });
 
+const uploadLink = createUploadLink({
+  uri: process.env.REACT_APP_API_ENDPOINT,
+});
+
 const authLink = setContext((_, { headers }) => {
-  // Get the authentication tokens from local storage if they exist.
-  // TODO: IF TOKEN HAS EXPIRED DO NOT FETCH IT, AND REQUIRE NEW TOKEN.
-  // PERHAPS WE CHECK STATUS OF TOKEN IF EXPIRED DELETE IT AND TRY TO RESET IT.
+  // Get the authentication token from local storage if it exists.
   const token = getTokens();
 
   console.log('token', token);
@@ -25,26 +28,27 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? `Bearer ${token}` : null,
     },
   };
 });
 
 const client = new ApolloClient({
+  link: ApolloLink.from([authLink.concat(httpLink), uploadLink]),
   cache: new InMemoryCache(),
-  link: ApolloLink.from([
-    onError(({ graphQLErrors, networkError }) => {
-      if (graphQLErrors)
-        graphQLErrors.map(({ message, locations, path }) =>
-          console.log(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          )
-        );
+  // link: ApolloLink.from([
+  //   authLink.concat(httpLink),
+  //   onError(({ graphQLErrors, networkError }) => {
+  //     if (graphQLErrors)
+  //       graphQLErrors.map(({ message, locations, path }) =>
+  //         console.log(
+  //           `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+  //         )
+  //       );
 
-      if (networkError) console.log(`[Network error]: ${networkError}`);
-    }),
-    authLink.concat(httpLink),
-  ]),
+  //     if (networkError) console.log(`[Network error]: ${networkError}`);
+  //   }),
+  // ]),
 });
 
 export default client;

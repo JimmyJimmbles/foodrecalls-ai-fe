@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import classnames from 'classnames';
-import {
-  Divider,
-  Drawer,
-  CircularProgress,
-  Typography,
-} from '@material-ui/core';
+import {Divider, Drawer, CircularProgress, Typography} from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import styles from './styles';
-import { Profile, SidebarNav } from './components';
-import { GET_CURRENT_USER } from 'queries/user';
-import { useQuery } from '@apollo/client';
+import {Profile, SidebarNav} from './components';
+import {GET_CURRENT_USER} from 'queries/user';
+import {useQuery} from '@apollo/client';
 
-const Sidebar = ({ open, variant, onClose, className, ...props }) => {
+const Sidebar = ({open, variant, onClose, className, companyID}) => {
   const classes = styles();
-  const { drawer, root, divider, nav } = classes;
+  const {drawer, root, divider, nav} = classes;
 
-  const { loading, error, data } = useQuery(GET_CURRENT_USER);
+  const {loading, error, data} = useQuery(GET_CURRENT_USER);
 
   const [myData, setMyData] = useState({});
 
@@ -33,7 +28,7 @@ const Sidebar = ({ open, variant, onClose, className, ...props }) => {
     return (
       <Drawer
         anchor="left"
-        classes={{ paper: drawer }}
+        classes={{paper: drawer}}
         onClose={onClose}
         open={open}
         variant={variant}
@@ -48,17 +43,22 @@ const Sidebar = ({ open, variant, onClose, className, ...props }) => {
     );
   }
 
+  console.log({companyID});
+
   const pages = [
     {
       title: 'Dashboard',
-      href: '/dashboard',
+      href: `/dashboard/${companyID}`,
       icon: <DashboardIcon />,
     },
     {
       title: 'Recalls',
-      href: '/recalls',
+      href: `/recalls/${companyID}`,
       icon: <EqualizerRoundedIcon />,
     },
+  ];
+
+  const adminPages = [
     {
       title: 'All Companies',
       href: '/companies',
@@ -72,17 +72,13 @@ const Sidebar = ({ open, variant, onClose, className, ...props }) => {
   ];
 
   return (
-    <Drawer
-      anchor="left"
-      classes={{ paper: drawer }}
-      onClose={onClose}
-      open={open}
-      variant={variant}
-    >
+    <Drawer anchor="left" classes={{paper: drawer}} onClose={onClose} open={open} variant={variant}>
       <div className={classnames(root, className)}>
         <Profile myData={myData} />
         <Divider className={divider} />
         <SidebarNav className={nav} pages={pages} />
+        <Divider />
+        <SidebarNav className={nav} pages={adminPages} />
       </div>
     </Drawer>
   );

@@ -5,7 +5,13 @@ import styles from './styles';
 import { useMediaQuery } from '@material-ui/core';
 import { Sidebar, Topbar, Footer } from './components';
 
-const Main = ({ children, ...props }) => {
+const Main = ({
+  children,
+  setUserToken,
+  setCompanyID,
+  companyID,
+  ...props
+}) => {
   const classes = styles();
   const { root, shiftContent, content } = classes;
   const theme = useTheme();
@@ -32,11 +38,12 @@ const Main = ({ children, ...props }) => {
         [shiftContent]: isDesktop,
       })}
     >
-      <Topbar onSidebarOpen={handleSidebarOpen} />
+      <Topbar onSidebarOpen={handleSidebarOpen} setUserToken={setUserToken} />
       <Sidebar
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
+        companyID={companyID}
       />
       <main className={content}>
         {children}

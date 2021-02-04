@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import classnames from 'classnames';
+import React from 'react';
 import styles from './styles';
-import { useCompanyRecalls } from 'hooks';
 import { Grid, CircularProgress } from '@material-ui/core';
 import { RecallsToolbar, RecallsTable, RecallLineGraph } from './components';
 import { RecallDoughnutByField } from 'components';
-import { GET_CURRENT_USER } from 'queries/user';
+import { GET_COMPANY_BY_ID } from 'queries/company';
 import { useQuery } from '@apollo/client';
 
-const RecallList = ({ test, className }) => {
-  console.log('test', test);
+const RecallList = ({ match: { params }, ...props }) => {
   const classes = styles();
 
   const { root, content } = classes;
 
-  const { loading, error, data } = useQuery(GET_CURRENT_USER);
+  const { loading, error, data } = useQuery(GET_COMPANY_BY_ID, {
+    variables: { id: params.id },
+  });
 
-  const [myData, setMyData] = useState({});
-
-  useEffect(() => {
-    if (!loading && !error && data && data.me) {
-      setMyData(data);
-    }
-  }, [loading, error, data]);
-
-  if (loading || !data || !myData || !myData.me) {
+  if (loading) {
     return (
       <Grid container>
         <Grid item>
@@ -33,31 +24,28 @@ const RecallList = ({ test, className }) => {
       </Grid>
     );
   }
-  const {
-    me: {
-      company: { name },
-    },
-  } = myData;
+
+  const company = data?.getCompanyById;
 
   return (
     <div className={root}>
-      <RecallsToolbar />
+      <RecallsToolbar companyName={company.name} />
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <div className={content}>
-            <RecallsTable companyName={name} />
+            <RecallsTable companyName={company.name} />
           </div>
         </Grid>
         <Grid item md={5} xs={12}>
           <RecallDoughnutByField
-            companyName={name}
+            companyName={company.name}
             dataField="classification"
             sortBy="classification"
             sortDirection="ASC"
           />
         </Grid>
         <Grid item md={7} xs={12}>
-          <RecallLineGraph companyName={name} />
+          <RecallLineGraph companyName={company.name} />
         </Grid>
       </Grid>
     </div>

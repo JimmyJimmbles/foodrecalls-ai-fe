@@ -1,5 +1,4 @@
-import React, { Fragment, useState } from 'react';
-// import { useLazyQuery } from '@apollo/client';
+import React, {Fragment, useState} from 'react';
 import classnames from 'classnames';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import styles from './styles';
@@ -16,6 +15,7 @@ import {
   TableSortLabel,
   Button,
 } from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -40,23 +40,30 @@ function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis.map(el => el[0]);
 }
 
 const headCells = [
-  {
-    id: 'uuid',
-    numeric: false,
-    disablePadding: false,
-    label: 'UUID',
-    sortable: true,
-  },
   {
     id: 'name',
     numeric: false,
     disablePadding: false,
     label: 'Company Name',
     sortable: true,
+  },
+  {
+    id: 'websiteUrl',
+    numeric: false,
+    disablePadding: false,
+    label: 'Website',
+    sortable: false,
+  },
+  {
+    id: 'phoneNumber',
+    numeric: false,
+    disablePadding: false,
+    label: 'Phone #',
+    sortable: false,
   },
   {
     id: 'actions',
@@ -67,7 +74,7 @@ const headCells = [
   },
 ];
 
-const CompaniesTable = ({ sortBy, sortDirection, className, companies }) => {
+const CompaniesTable = ({sortBy, sortDirection, className, companies, setCompanyID}) => {
   const classes = styles();
   const [order, setOrder] = useState(sortDirection);
   const [orderBy, setOrderBy] = useState(sortBy);
@@ -80,23 +87,21 @@ const CompaniesTable = ({ sortBy, sortDirection, className, companies }) => {
     setOrderBy(property);
   };
 
-  const handlePageChange = (event, page) => {
-    setPage(page);
+  const handlePageChange = (event, page) => setPage(page);
+
+  const handleRowsPerPageChange = event => setRowsPerPage(event.target.value);
+
+  const handleCompanySelect = companyID => {
+    console.log({companyID2: companyID});
+    setCompanyID(companyID);
   };
 
-  const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(event.target.value);
-  };
+  const {count, records} = companies;
 
-  const {
-    getAllCompanies: { count, records },
-  } = companies;
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, count - page * rowsPerPage);
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, count - page * rowsPerPage);
-
-  function EnhancedTableHead({ order, orderBy, onRequestSort }) {
-    const createSortHandler = (property) => (event) => {
+  function EnhancedTableHead({order, orderBy, onRequestSort}) {
+    const createSortHandler = property => event => {
       onRequestSort(event, property);
     };
 
@@ -149,22 +154,35 @@ const CompaniesTable = ({ sortBy, sortDirection, className, companies }) => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((company, i) => (
                       <TableRow className={classes.tableRow} hover key={i}>
-                        <TableCell>{company.uuid}</TableCell>
                         <TableCell>{company.name}</TableCell>
+                        <TableCell>{company.websiteUrl ? company.websiteUrl : '-'}</TableCell>
+                        <TableCell>{company.phoneNumber ? company.phoneNumber : '-'}</TableCell>
                         <TableCell>
                           <Button
                             color="primary"
                             size="small"
                             variant="outlined"
                             aria-label="View Company"
+                            onClick={() => handleCompanySelect(company.id)}
+                            component={Link}
+                            to={`/dashboard/${company.id}`}
                           >
-                            View Company
+                            View
+                          </Button>
+                          <Button
+                            color="secondary"
+                            size="small"
+                            variant="outlined"
+                            aria-label="Edit Company"
+                            // onClick={() => handleCompanySelect(company.id)}
+                          >
+                            Edit
                           </Button>
                         </TableCell>
                       </TableRow>
                     ))}
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableRow style={{height: 53 * emptyRows}}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}

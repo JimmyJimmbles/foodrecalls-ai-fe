@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Redirect } from 'react-router';
 import {
   AppBar,
   Toolbar,
@@ -16,9 +15,12 @@ import styles from './styles';
 import { GET_CURRENT_USER } from 'queries/user';
 import { useQuery } from '@apollo/client';
 import { deleteTokens } from 'local-storage';
+import { useApolloClient } from '@apollo/client';
 
-const Topbar = ({ className, onSidebarOpen, ...props }) => {
-  const { client, loading, data } = useQuery(GET_CURRENT_USER);
+const Topbar = ({ className, onSidebarOpen, setUserToken, ...props }) => {
+  console.log({ setUserToken });
+  const client = useApolloClient();
+  const { loading, data } = useQuery(GET_CURRENT_USER);
   const classes = styles();
 
   const [notifications] = useState([]);
@@ -26,15 +28,26 @@ const Topbar = ({ className, onSidebarOpen, ...props }) => {
   // Reset Apollo and local store on logout
   const handleLogOut = () => {
     deleteTokens();
-    client.clearStore();
+    client.resetStore();
+
+    setUserToken(null);
   };
 
   return (
     <AppBar {...props} className={classnames(classes.root, className)}>
       <Toolbar>
-        <RouterLink to="/dashboard" className={classes.logo}>
-          FoodRecalls<span className={classes.logoAlt}>.ai</span>
-        </RouterLink>
+        {data?.me?.company?.id ? (
+          <RouterLink
+            to={`/dashboard/${data?.me?.company?.id}`}
+            className={classes.logo}
+          >
+            FoodRecalls<span className={classes.logoAlt}>.ai</span>
+          </RouterLink>
+        ) : (
+          <RouterLink to="/login" className={classes.logo}>
+            FoodRecalls<span className={classes.logoAlt}>.ai</span>
+          </RouterLink>
+        )}
         <div className={classes.flexGrow} />
         <Hidden smDown>
           <IconButton color="inherit">

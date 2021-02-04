@@ -9,7 +9,16 @@ import styles from './styles';
 const BrandPerception = ({ className }) => {
   const classes = styles();
 
-  const { root } = classes;
+  const {
+    root,
+    title,
+    avatar,
+    icon,
+    difference,
+    differenceIcon,
+    differenceValue,
+    caption,
+  } = classes;
 
   return (
     <Card className={classnames(root, className)}>
@@ -17,7 +26,7 @@ const BrandPerception = ({ className }) => {
         <Grid container justify="space-between">
           <Grid item>
             <Typography
-              className={classes.title}
+              className={title}
               color="textSecondary"
               gutterBottom
               variant="body2"
@@ -27,17 +36,17 @@ const BrandPerception = ({ className }) => {
             <Typography variant="h3">Positive</Typography>
           </Grid>
           <Grid item>
-            <Avatar className={classes.avatar}>
-              <MoodIcon className={classes.icon} />
+            <Avatar className={avatar}>
+              <MoodIcon className={icon} />
             </Avatar>
           </Grid>
         </Grid>
-        <div className={classes.difference}>
-          <ArrowUpwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
+        <div className={difference}>
+          <ArrowUpwardIcon className={differenceIcon} />
+          <Typography className={differenceValue} variant="body2">
             +10%
           </Typography>
-          <Typography className={classes.caption} variant="caption">
+          <Typography className={caption} variant="caption">
             Since last month
           </Typography>
         </div>

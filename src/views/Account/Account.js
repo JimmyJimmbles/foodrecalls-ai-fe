@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import styles from './styles';
-import { Grid, Typography, Avatar, CircularProgress } from '@material-ui/core';
-import { GET_CURRENT_USER } from 'queries/user';
-import { useQuery } from '@apollo/client';
+import { Grid, CircularProgress } from '@material-ui/core';
 import { AccountProfile, AccountDetails } from './components';
 
 import { getFullName, getInitials } from 'helpers';
 
-const Account = ({ className }) => {
+const Account = ({ className, loading, error, myData }) => {
+  console.log('me', myData);
   const classes = styles();
-  const { loading, error, data } = useQuery(GET_CURRENT_USER);
-
-  const [myData, setMyData] = useState({});
-
-  useEffect(() => {
-    if (!loading && !error && data) {
-      setMyData(data);
-    }
-  }, [loading, error, data]);
-
   const { root } = classes;
 
-  if (loading || !data || !myData || !myData.me) {
+  if (loading || !myData || !myData.me) {
     return (
       <div className={classnames(root, className)}>
         <CircularProgress color="secondary" />
@@ -30,7 +19,7 @@ const Account = ({ className }) => {
     );
   }
 
-  const { firstName, lastName, email } = myData.me;
+  const { uuid, firstName, lastName, email } = myData.me;
 
   const jobTitle = myData.me?.jobTitle;
   const role = myData.me?.role;
@@ -39,7 +28,7 @@ const Account = ({ className }) => {
   const initials = getInitials(fullName);
 
   return (
-    <div className={classes.root}>
+    <div className={root}>
       <Grid container spacing={4}>
         <Grid item lg={4} md={6} xl={4} xs={12}>
           <AccountProfile
@@ -52,6 +41,7 @@ const Account = ({ className }) => {
         </Grid>
         <Grid item lg={8} md={6} xl={8} xs={12}>
           <AccountDetails
+            uuid={uuid}
             firstName={firstName}
             lastName={lastName}
             email={email}

@@ -5,16 +5,20 @@ import { Grid, CircularProgress } from '@material-ui/core';
 import { useCompanyList } from 'hooks';
 import { CompaniesTable, CompaniesToolbar } from './components';
 
-const CompanyList = () => {
+const CompanyList = ({ setCompanyID }) => {
   const [companies, setCompanies] = useState({});
+  const [filteredCompanies, setFilteredCompanies] = useState({
+    records: [],
+    count: 0,
+  });
   const classes = styles();
 
   const { root, content } = classes;
 
   const { loading, error, companyData } = useCompanyList({
-    limit: 1001,
+    limit: 2000,
     offset: 0,
-    sortBy: 'createdAt',
+    sortBy: 'name',
     sortDirection: 'ASC',
   });
 
@@ -24,7 +28,16 @@ const CompanyList = () => {
     }
   }, [loading, error, companyData]);
 
-  if (loading || !companies || !companies.getAllCompanies) {
+  useEffect(() => {
+    setFilteredCompanies(filteredCompanies);
+  }, [filteredCompanies]);
+
+  if (
+    loading ||
+    !companies ||
+    !companies.getAllCompanies ||
+    !filteredCompanies?.records
+  ) {
     return (
       <div className={classnames(root)}>
         <CircularProgress color="secondary" />
@@ -34,12 +47,16 @@ const CompanyList = () => {
 
   return (
     <div className={root}>
-      <CompaniesToolbar />
+      <CompaniesToolbar
+        companies={companies}
+        setFilteredCompanies={setFilteredCompanies}
+      />
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <div className={content}>
             <CompaniesTable
-              companies={companies}
+              setCompanyID={setCompanyID}
+              companies={filteredCompanies}
               sortBy="createdAt"
               sortDirection="ASC"
             />
